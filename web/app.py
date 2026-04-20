@@ -33,8 +33,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from flask import Flask, request, jsonify, render_template
 from src.analyzer import JobFitAnalyzer
 from src.models import FitLevel
+from src.health import check_api_key
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
+
+# Verify API key on startup — fail fast with a clear message
+print("\nChecking Anthropic API key...")
+check_api_key(verbose=True)
+print()
 
 # Initialize analyzer once at startup — not on every request
 analyzer = JobFitAnalyzer(max_tokens=4000)

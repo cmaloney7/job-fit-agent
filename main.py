@@ -25,6 +25,7 @@ from rich import print as rprint
 
 from src.analyzer import JobFitAnalyzer
 from src.models import FitLevel
+from src.health import require_api_key
 
 console = Console()
 
@@ -98,6 +99,9 @@ def display_analysis(analysis) -> None:
 
 
 def main():
+    # Verify API key is set and working before doing anything else
+    require_api_key()
+
     parser = argparse.ArgumentParser(
         description="AI-powered job fit analyzer",
         formatter_class=argparse.RawDescriptionHelpFormatter,

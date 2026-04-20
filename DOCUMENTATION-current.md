@@ -543,6 +543,9 @@ source venv/bin/activate
 # Set API key (run every new Terminal session)
 export ANTHROPIC_API_KEY="sk-ant-..."
 
+# API key healthcheck
+python -m src.health
+
 # Start web UI
 python web/app.py
 # Then open: http://localhost:5000

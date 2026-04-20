@@ -26,6 +26,8 @@ import os
 from pathlib import Path
 from src.analyzer import JobFitAnalyzer
 from src.models import FitAnalysis, FitLevel
+from src.health import check_api_key
+
 
 def pytest_configure(config):
     """Register custom markers and print eval suite guidance."""
@@ -33,7 +35,21 @@ def pytest_configure(config):
         "markers",
         "api: marks tests that call the Anthropic API (use -m 'not api' to skip)"
     )
-    
+
+
+def pytest_sessionstart(session):
+    """Verify API key is working before running any eval tests."""
+    print("\n--- Anthropic API Check ---")
+    ok = check_api_key(verbose=True)
+    if not ok:
+        pytest.exit(
+            "Cannot run eval suite without a valid Anthropic API key.\n"
+            "See DOCUMENTATION.md → API Key Setup for instructions.",
+            returncode=1
+        )
+    print("---------------------------\n")
+
+
 # ─── Ground Truth Dataset ─────────────────────────────────────────────────────
 #
 # This is your "labeled dataset" — the known correct answers you're testing
