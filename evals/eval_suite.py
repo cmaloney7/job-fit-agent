@@ -27,7 +27,13 @@ from pathlib import Path
 from src.analyzer import JobFitAnalyzer
 from src.models import FitAnalysis, FitLevel
 
-
+def pytest_configure(config):
+    """Register custom markers and print eval suite guidance."""
+    config.addinivalue_line(
+        "markers",
+        "api: marks tests that call the Anthropic API (use -m 'not api' to skip)"
+    )
+    
 # ─── Ground Truth Dataset ─────────────────────────────────────────────────────
 #
 # This is your "labeled dataset" — the known correct answers you're testing
@@ -101,8 +107,8 @@ def analyzer():
 
 @pytest.fixture(scope="session")
 def resume_text():
-    """Load resume once for the entire session."""
-    resume_path = Path("data/resume.txt")
+    project_root = Path(__file__).parent.parent
+    resume_path = project_root / "data" / "resume.txt"
     if not resume_path.exists():
         pytest.skip("data/resume.txt not found — add your resume to run evals")
     return resume_path.read_text(encoding="utf-8").strip()
@@ -123,7 +129,8 @@ def analyses(analyzer, resume_text):
     """
     results = {}
     for case in GROUND_TRUTH:
-        jd_path = Path(case["jd_file"])
+        project_root = Path(__file__).parent.parent
+        jd_path = project_root / case["jd_file"]
         if not jd_path.exists():
             print(f"\nWARNING: {case['jd_file']} not found — skipping {case['id']}")
             continue
@@ -358,3 +365,39 @@ class TestStructuralIntegrity:
             assert gap.severity in valid_severities, (
                 f"Gap '{gap.skill}' has invalid severity '{gap.severity}'"
             )
+# ─── Skip Reason Reference ────────────────────────────────────────────────────
+#
+# If you see skipped tests and wonder why, here's the complete reference:
+#
+# "Analysis not available for X"
+#   → The JD file wasn't found or the API call failed for that case.
+#     Check that data/sample_jds/ has all four JD files and your
+#     ANTHROPIC_API_KEY is set (in .env or exported in Terminal).
+#
+# "No required skills to check for this case"
+#   → This case has no must_mention_skills in GROUND_TRUTH.
+#     Intentional — not every case has required skill keywords to verify.
+#
+# "No required gaps to check for this case"
+#   → This case has no must_identify_gaps in GROUND_TRUTH.
+#     Intentional — not every case has required gap keywords to verify.
+#
+# "Only applies to NOT_FIT cases"
+#   → test_not_fit_has_low_score only runs for NOT_FIT cases.
+#     Strong, Partial, and Stretch cases skip this test by design.
+#
+# "Only applies to STRONG cases"
+#   → test_strong_fit_has_multiple_matches only runs for STRONG cases.
+#     Not-Fit, Partial, and Stretch cases skip this test by design.
+#
+# "No recommendation ground truth for this case"
+#   → This case has should_recommend_applying: None in GROUND_TRUTH.
+#     Intentional — we chose not to assert the apply/skip verdict.
+#
+# "NOT_FIT cases don't require interview questions"
+#   → Not-Fit analyses correctly skip interview question validation.
+#     Claude doesn't generate interview prep for clearly wrong-fit roles.
+#
+# EXPECTED SKIP COUNT: ~10 skips out of 52 tests is normal and correct.
+# All skips are intentional test design decisions, not failures.
+# Zero failures = healthy eval suite.

@@ -15,8 +15,10 @@ import json
 import os
 from pathlib import Path
 from typing import Optional
+from dotenv import load_dotenv
 
-import anthropic
+load_dotenv()
+import anthropic 
 
 from src.models import FitAnalysis, FitLevel, SkillGap
 from src.prompts import SYSTEM_PROMPT, ANALYSIS_PROMPT_TEMPLATE
