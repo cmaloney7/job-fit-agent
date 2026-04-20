@@ -1,0 +1,21 @@
+AI Test Automation Engineer
+Gravie — Remote US
+
+We're looking for an AI Test Automation Engineer who will own the design and development
+of AI-driven test automation systems across our product portals.
+
+You Will:
+- Design and build AI-driven test automation workflows using tools like Claude Code
+- Architect a Playwright test framework from scratch
+- Build tight feedback loops between local test execution and CI pipeline results
+- Lead migration from legacy test suites to Playwright
+- Integrate Playwright test execution into GitLab CI/CD pipelines
+
+You Bring:
+- 5+ years of experience in test automation engineering
+- Demonstrated experience using AI coding tools (Claude Code, Cursor, GitHub Copilot)
+- Hands-on experience with Playwright or comparable modern E2E framework
+- Proficiency in TypeScript or JavaScript
+- Experience with CI/CD pipelines (GitLab preferred)
+- Experience migrating legacy test automation to a modern framework
+- Background in health insurance or regulated industries a plus

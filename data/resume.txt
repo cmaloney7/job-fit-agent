@@ -1,0 +1,71 @@
+COREY MOLLOY
+QA Engineering Leader
+Seattle, WA | cdmolloy@gmail.com | linkedin.com/in/cmolloy
+
+QA Engineering Leader with 15+ years of experience owning quality across complex software platforms, designing scalable automation frameworks, leading QA teams, and embedding quality gates directly into CI/CD pipelines. I've built and evolved test architectures across UI, API, integration, and performance layers, adapting tooling to product needs rather than forcing a single solution. More recently, I've led QA organizations, standardized SDLC processes, and driven AI-enabled testing initiatives to accelerate delivery. I thrive where quality is treated as an engineering discipline and strong automation and process work together to ship reliable software at scale.
+
+CORE COMPETENCIES
+Test Automation Architecture | QA Team Leadership | CI/CD Quality Gates | AI-Enabled QA | SDLC Process Design | Defect Lifecycle Management | Release Readiness | Exploratory & Regression Testing | Performance Testing | API Testing | People Management | Metrics & Reporting
+
+PROFESSIONAL EXPERIENCE
+
+Senior QA Engineer / QA Manager
+Vivacity Tech PBC | Remote | Apr 2024 – Present
+- Lead quality across multiple production software initiatives while remaining hands-on with test strategy and automation, managing and mentoring a cross-functional QA team including engineers, automation specialists, interns, and offshore contractors.
+- Architect and govern Cypress-based automation frameworks across UI, API, integration, and end-to-end testing, embedded into CI/CD pipelines with reporting, stability metrics, and release safeguards.
+- Drive AI-enabled QA initiatives leveraging OpenAI, Anthropic, ClaudeCode, and automation agents to accelerate test creation, defect management, automation maintenance, code review, and release documentation.
+- Own test planning, execution schedules, and release readiness across product teams; deliver quality metrics, defect trends, and release risk reporting to leadership.
+- Design, enforce, and continuously improve QA processes across the SDLC, including defect lifecycle management, quality gates, and RTM traceability in Jira.
+Tools: Cypress, GitHub, CI/CD Pipelines, OpenAI, Anthropic, ClaudeCode, CodeRabbit, BDD/Gherkin, Jira RTM, LaunchDarkly, Render
+
+Senior QA Automation Engineer
+Sensei | Santa Monica, CA | Mar 2021 – Mar 2024
+- Led automation of test plans and cases, guaranteeing traceability of hundreds of test scenarios to project requirements — consolidating all test cases into Zephyr and standardizing BDD/Gherkin syntax for business requirements.
+- Designed and implemented a full-stack Cypress.io automation framework across UI, API, and microservices repos, wired into CircleCI pipelines with results and performance stats via Cypress Dashboard.
+- Tested and supported multiple integrated applications, including resort guest management, health portals, Whoop health monitoring, Staff Operations Dashboard, iOS Guide app, and Book4Time integrations.
+- Supervised QA deliverables for peers and 3rd party offshore contractors; assisted with Deployment, Monitoring, DevOps, and Continuous Delivery activities.
+Tools: Cypress.io, CircleCI, Postman, Zephyr, Jira, Confluence, REST API
+
+SDET
+Holland America Line | Greater Seattle Area | Mar 2016 – Mar 2021
+- Full-stack test automation and DevOps support across SCRUM teams covering online check-in, onboard revenue, credit card tokenization (PCI), and web reservation systems.
+- Implemented and maintained automation frameworks for UI, API, database, and mainframe integration testing; built performance testing using Gatling and application monitoring via Splunk and AppDynamics.
+- Achieved test coverage equivalent to 10K+ manual test hours per month through data-driven framework design and reusable component architecture.
+Tools: Selenium, Angular Protractor, RestAssured, Gatling, BrowserStack, Jenkins, Docker, Java, NodeJS, Splunk, AppDynamics, Jira
+
+Automation Test Lead
+Southwest Gas Corporation | Las Vegas, NV | Dec 2015 – Mar 2016
+- Completed automation tool discovery and implemented a BVT suite for application delivery; defined test requirements with business stakeholders and integrated results into in-house reporting systems.
+- Provided mentoring and training on automation tools and frameworks to the application support team.
+
+Test Automation Engineer
+Rite Aid | Harrisburg, PA | Sep 2015 – Dec 2015
+- Built automation framework from scratch for Java-based prescription application; led proof of concepts, tool onboarding, and mentorship for QA team on new automation technologies.
+
+Test Automation Architect
+Alaska Airlines | Greater Seattle Area | Nov 2010 – Jul 2015
+- Designed and implemented automation frameworks for web, mobile web, and mobile applications, including the AlaskaAir.com e-commerce redesign, achieving coverage equivalent to 10K manual test hours/month.
+- Created a data-driven framework enabling fast test creation with reusable components; ported legacy automation to a C# Selenium framework on VSO using Git.
+- Implemented mobile device automation using DeviceAnywhere and Perfecto Mobile; led automation lab design and setup of 30 VDI/VM workstations.
+- Managed project-level automation tasks, mentored multiple automation engineers, and led tool POC/pilot evaluations to determine ROI.
+- Used Azure DevOps for sprint management, test planning, and CI/CD pipeline integration.
+
+Test Automation Architect / Lead
+Premera Blue Cross | Oct 2009 – Nov 2010
+- Reduced manual testing hours by 90 per test cycle through automation of HIPAA X12 transactions (83x & 27x) across 4010 and 5010 versions.
+- Led team of 3 automation analysts on a Facets upgrade project, eliminating 20% of manual effort on a 9,000-hour test project.
+- Developed standards for consolidating automation artifacts; trained test analysts on execution, analysis, and maintenance.
+
+EARLIER CAREER
+Software Testing Consultant & Automation Architect (2001–2009)
+Delivered automation architecture, testing best practices, and QA leadership across a range of industries, including financial services, government, retail, and marketing, through Visionary Integration Professionals (VIP) and direct engagements. Clients included US Bancorp, GMAC-RFC, Carlson, Carlson Marketing Group, Hennepin County, Super Value, and Securan Financial.
+
+EDUCATION
+B.S. in Information Networking | University of Minnesota – Twin Cities
+
+TECHNICAL SKILLS
+Automation Frameworks: Cypress.io, Selenium, Angular Protractor, RestAssured, Gatling, Postman
+Languages & Platforms: JavaScript, Java, C#, NodeJS, REST API, BDD/Gherkin
+CI/CD & DevOps: CircleCI, Jenkins, GitHub, Docker, Render, LaunchDarkly
+AI & Tooling: OpenAI, Anthropic/ClaudeCode, CodeRabbit, AI-enabled QA agents, LLMs, RAG, AI Orchestration
+Test Management: Jira, Zephyr, Confluence, RTM, Splunk, AppDynamics, BrowserStack

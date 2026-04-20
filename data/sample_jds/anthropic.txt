@@ -1,0 +1,27 @@
+Prompt Engineer, Claude Code
+Anthropic — Seattle, WA (Hybrid)
+Salary: $300,000-$405,000
+
+About the Role:
+As a Prompt Engineer on the Claude Code team, you'll own Claude's behaviors specifically 
+within Claude Code — ensuring users get a consistent, safe, and high-quality experience 
+as we ship new models and evolve the product.
+
+Responsibilities:
+- Own Claude Code's system prompts for each new model snapshot
+- Review production prompt changes and serve as a resource for challenging prompting problems
+- Lead incident response for behavioral and policy concerns
+- Scale prompting and evaluation best practices across Claude Code and product teams
+- Deliver product evaluations focused on model behaviors
+- Define processes for rolling out prompt changes including launch criteria
+- Create model-specific prompt guides documenting quirks and optimal prompting strategies
+- Collaborate with product teams to translate feature requirements into effective prompts
+
+You May Be a Good Fit If You:
+- Are a power user of agentic coding tools with strong intuition about model capabilities
+- Thrive in high-intensity environments with fast iteration cycles
+- Are skilled at creating and maintaining behavioral evaluations
+- Have strong technical understanding of agent scaffold architectures and model training
+- Are an experienced coder comfortable in Python and TypeScript
+- Have experience translating user feedback into coherent prompts and behavioral specifications
+- Care deeply about AI safety

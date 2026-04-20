@@ -1,0 +1,20 @@
+Regional Quality Manager
+E2 Optics — Remote
+
+E2 Optics is a technology integrator specializing in data center infrastructure.
+
+Responsibilities:
+- Define and standardize QA/QC procedures for structured cabling, OSP, AV, DAS, and data center systems
+- Oversee jobsite inspections, audits, and closeout documentation
+- Ensure work meets NEC, BICSI, TIA, and customer-specific standards
+- Lead cross-functional quality programs across field operations
+- Support onboarding and certification programs including BICSI and client-specific requirements
+- Establish and monitor KPIs for quality performance
+- Travel to regional data center construction sites as required
+
+Requirements:
+- 5+ years quality management in low voltage, structured cabling, or data center construction
+- BICSI RCDD, PMP, or equivalent certifications preferred
+- Knowledge of BICSI standards, ANSI/TIA codes, and electrical/communications best practices
+- Experience with NEC, BICSI, TIA compliance and jobsite inspection
+- Building and construction knowledge for data center environments

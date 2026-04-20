@@ -1,0 +1,25 @@
+Principal Software Development Engineer in Test
+The Walt Disney Company — New York, NY (On-site)
+
+Job Summary:
+Seeking a visionary Principal SDET to spearhead quality engineering across streaming, 
+data and advertising systems. You will set the strategic direction for automation, 
+quality practices, and test architectures organization-wide.
+
+Responsibilities:
+- Define and drive the vision, strategy, and roadmap for test automation across multiple business units
+- Lead the architecture of scalable, resilient, cloud-native test automation solutions
+- Make high-impact technical decisions on frameworks, toolsets, and integrations
+- Partner with Platform Architects and DevOps to ensure quality gates in deployment pipelines
+- Serve as a coaching resource to SDETs, engineers, and leadership
+- Lead delivery of multiple concurrent cross-team testing initiatives
+- Champion research and adoption of emerging technologies including AI/ML in testing
+- Define and track advanced quality metrics including escape rates, flakiness, and system reliability
+
+Minimum Qualifications:
+- 10+ years experience in quality engineering or software development with recent leadership
+- Proven expertise architecting and scaling test automation for distributed, cloud-native systems
+- Track record of influencing enterprise strategy and leading transformation initiatives
+- Advanced proficiency with Python or modern OO languages
+- Experience with ad-tech or large-scale streaming systems is a plus
+- Bachelor's degree in Computer Science or related field
