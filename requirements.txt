@@ -4,3 +4,4 @@ rich>=13.0.0       # Pretty terminal output — makes learning more fun
 pytest>=8.0.0      # Phase 2 eval framework
 playwright
 pytest-playwright
+flask
