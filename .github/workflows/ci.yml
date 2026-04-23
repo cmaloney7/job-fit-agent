@@ -16,6 +16,8 @@ on:
           - 'false'
           - 'true'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 jobs:
 
   # ── Job 1: Unit Tests ──────────────────────────────────────────────────────
