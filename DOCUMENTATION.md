@@ -349,6 +349,15 @@ job_fit_agent/
 │   └── __init__.py
 ├── tests/
 │   └── test_analyzer.py # Unit tests (no API calls)
+├── tests_e2e/
+│   ├── conftest.py      # Playwright fixtures and server setup
+│   ├── test_ui.py       # E2E tests (smoke, validation, analysis flow)
+│   └── pages/
+│       └── analyzer_page.py  # Page Object for the web UI
+├── web/
+│   ├── app.py           # Flask web server
+│   └── templates/
+│       └── index.html   # Web UI (HTML/CSS/JS)
 ├── data/
 │   ├── resume.txt       # Your resume in plain text
 │   └── sample_jds/      # Job description text files
@@ -376,8 +385,10 @@ source venv/bin/activate   # Windows: venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Add API key (get from console.anthropic.com)
-export ANTHROPIC_API_KEY="sk-ant-..."
+# Install Playwright browser (one-time setup)
+python -m playwright install chromium
+
+# Set up your .env file (see section below — do this before running anything)
 
 # Add your resume
 # Paste plain text resume into data/resume.txt
@@ -394,11 +405,176 @@ pytest evals/eval_suite.py -v
 
 ---
 
+## API Key Setup — .env File
+
+Instead of running `export ANTHROPIC_API_KEY=...` every time you open
+a new Terminal window, store your key in a `.env` file and let the
+app load it automatically on startup.
+
+**Step 1 — Create the `.env` file in the project root:**
+```bash
+cd ~/Projects/job-fit-agent-phase-1/job_fit_agent
+touch .env
+```
+
+Open `.env` in any text editor and add:
+```
+ANTHROPIC_API_KEY=sk-ant-...
+```
+No quotes, no spaces around the `=`. Replace `sk-ant-...` with your
+actual key from console.anthropic.com.
+
+**Step 2 — Add `.env` to `.gitignore`** so your API key is never committed:
+```bash
+echo ".env" >> .gitignore
+```
+
+**Step 3 — Verify `python-dotenv` is installed:**
+```bash
+pip install python-dotenv
+```
+
+**How it works:** Both `web/app.py` and `main.py` call `load_dotenv()`
+on startup, which reads your `.env` file and loads the key into the
+environment automatically. You never need to `export` it manually again.
+
+**After this, your startup sequence is simply:**
+```bash
+source venv/bin/activate
+python web/app.py
+```
+
+> **Security note:** Never commit your `.env` file to Git. The `.gitignore`
+> entry above prevents this. If you ever accidentally expose your API key,
+> rotate it immediately at console.anthropic.com.
+
+---
+
+## Starting the Web Application (Phase 3)
+
+Every time you want to use the web UI, follow these steps in order.
+
+**Step 1 — Open Terminal and navigate to the project:**
+```bash
+cd ~/Projects/job-fit-agent-phase-1/job_fit_agent
+```
+
+**Step 2 — Activate the virtual environment:**
+```bash
+source venv/bin/activate
+```
+You'll see `(venv)` appear at the start of your prompt. This is required
+every time you open a new Terminal window — without it, Python commands
+won't find the installed packages.
+
+**Step 3 — Set your Anthropic API key:**
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+```
+This is also required every new Terminal session unless you've added it
+to your `~/.zshrc` file permanently.
+
+**Step 4 — Start the Flask server:**
+```bash
+python web/app.py
+```
+You'll see output like:
+```
+* Running on http://127.0.0.1:5000
+* Debug mode: on
+```
+
+**Step 5 — Open the app in your browser:**
+```
+http://localhost:5000
+```
+
+Paste your resume text in the left panel, paste a job description in the
+right panel, and click **Analyze Fit**.
+
+---
+
+**To stop the server:** Press `Ctrl+C` in the Terminal window where it's running.
+
+**If you see "Address already in use":** A previous server is still running.
+Find and stop it:
+```bash
+lsof -i :5000
+kill -9 <PID>   # replace <PID> with the number from the output above
+```
+
+---
+
+## Running the Playwright E2E Tests (Phase 3)
+
+The E2E tests require the Flask server to be running. The test suite
+starts its own server automatically on port 5001 — you don't need to
+start the server manually for tests.
+
+```bash
+# Make sure venv is activated and API key is set, then:
+
+# Smoke tests only — no API calls, fast (~15 seconds)
+pytest tests_e2e/ -v -k "smoke"
+
+# Validation tests — tests error handling, no API calls
+pytest tests_e2e/ -v -k "validation"
+
+# Full E2E suite — includes API calls (~5-6 minutes)
+pytest tests_e2e/ -v
+
+# Watch tests run in a visible browser window
+# Open conftest.py and change headless=True to headless=False, then:
+pytest tests_e2e/ -v -k "smoke"
+```
+
+**Common gotcha:** If `test_error_clears_on_new_valid_submission` fails,
+it's almost always because the API key isn't set in the current terminal
+session. Set it and re-run.
+
+---
+
+## Quick Reference — All Commands
+
+```bash
+# Activate environment (run every new Terminal session)
+source venv/bin/activate
+
+# Set API key (run every new Terminal session)
+export ANTHROPIC_API_KEY="sk-ant-..."
+
+# API key healthcheck
+python -m src.health
+
+# Start web UI
+python web/app.py
+# Then open: http://localhost:5000
+
+# CLI analysis
+python main.py --jd data/sample_jds/gravie.txt
+
+# Unit tests (instant)
+pytest tests/ -v
+
+# Eval suite (~3 minutes, costs ~$0.10)
+pytest evals/eval_suite.py -v
+
+# E2E smoke tests (fast, no API)
+pytest tests_e2e/ -v -k "smoke"
+
+# Full E2E suite (~6 minutes)
+pytest tests_e2e/ -v
+```
+
+---
+
 ## Dependencies
 
 | Package | Purpose |
 |---------|---------|
 | `anthropic` | Anthropic API client |
+| `flask` | Web server for the Phase 3 UI |
+| `playwright` | Browser automation for E2E tests |
 | `rich` | Color-coded terminal output |
-| `pytest` | Test framework for both unit tests and evals |
-| `python-dotenv` | Optional: load API key from `.env` file 
+| `pytest` | Test framework for unit tests, evals, and E2E |
+| `python-dotenv` | Optional: load API key from `.env` file |
