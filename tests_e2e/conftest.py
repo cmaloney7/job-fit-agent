@@ -89,7 +89,7 @@ def browser_instance():
     """
     with sync_playwright() as p:
         browser = p.chromium.launch(
-            headless=False,  # Change to False to watch tests run
+            headless=True,  # Change to False to watch tests run
         )
         yield browser
         browser.close()
