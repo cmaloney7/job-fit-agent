@@ -20,9 +20,9 @@ identified in the job market:
 |-------|---------------|-----------------|
 | 1 | Core Python application + Anthropic API | Python, LLM integration |
 | 2 | Eval framework for measuring AI output quality | AI QE evaluation methodology |
-| 3 | Playwright UI + E2E test suite | Playwright hands-on experience |
-| 4 | Azure DevOps CI/CD pipeline | Azure DevOps modernization |
-| 5 | LangChain multi-tool agent refactor | Agentic framework knowledge |
+| 3 | Flask UI + 16 Playwright E2E tests | Playwright hands-on experience |
+| 4 | GitHub Actions CI/CD pipeline + branch protection | CI/CD configuration, feature branch workflow |
+| 5 | LangChain multi-tool agent refactor | Agentic framework knowledge, tool calling, context management |
 
 ---
 
@@ -232,52 +232,210 @@ skill that makes a good AI QE engineer.
 
 ---
 
-## Phase 3 — Playwright UI *(coming soon)*
+## Phase 3 — Flask UI + Playwright E2E Tests
 
-### What You'll Build
+### What You Built
 
-A simple web frontend for the job fit analyzer: paste a JD, get results.
-Write Playwright tests for it.
+A Flask web server and a clean HTML/CSS/JS frontend — paste a resume and JD,
+click Analyze Fit, see the full analysis rendered in the browser with
+color-coded verdict banners, score bars, gap cards, and interview questions.
 
-### Skills Targeted
+Then wrote 16 Playwright E2E tests across three layers:
+- **Smoke tests** — page loads, elements exist, typing works (no API, instant)
+- **Validation tests** — error handling for empty/short inputs, error state resets
+- **Analysis flow tests** — full end-to-end through a live API
 
-- Playwright from scratch: page objects, fixtures, locators, assertions
-- E2E testing of a real web app you built yourself
-- The practical differences between Cypress and Playwright
-- Testing async UI behavior and API responses
+Key files:
+- `web/app.py` — Flask server with routes: GET /, POST /analyze
+- `web/templates/index.html` — single-file UI with data-testid attributes for Playwright
+- `tests_e2e/pages/analyzer_page.py` — Page Object pattern wrapping all UI interactions
+- `tests_e2e/conftest.py` — fixtures that start a live server once for all 16 tests
+- `tests_e2e/test_ui.py` — the 16 tests themselves
+
+### What You Learned
+
+- Flask routing and request/response handling
+- Playwright locators, assertions, and explicit timeouts
+- The Page Object pattern — all UI interactions abstracted into one class
+- Session-scoped fixtures that start a live server once for all tests
+- Debugging "passes locally, fails in CI" — headed vs headless browser mode
+- `data-testid` attributes as a testing contract between UI and test code
+
+### Key Playwright vs Cypress Difference
+
+Playwright timeouts are explicit per-action rather than a global setting.
+`wait_for_results(timeout=60000)` is intentional — API calls take time.
+In Cypress you'd set a global `defaultCommandTimeout`. In Playwright you
+set it where it matters.
 
 ---
 
-## Phase 4 — Azure DevOps Pipeline *(coming soon)*
+## Phase 4 — GitHub Actions CI/CD Pipeline
 
-### What You'll Build
+### What You Built
 
-A CI/CD pipeline in Azure DevOps that runs the eval suite and Playwright
-tests on every commit. Includes a quality gate that fails the build if
-AI output quality drops below a threshold.
+A `.github/workflows/ci.yml` pipeline that runs automatically on every
+push to main and every pull request. Three jobs:
 
-### Skills Targeted
+1. **Unit Tests** — runs instantly, no API calls, always runs on push/PR
+2. **Playwright Smoke Tests** — browser tests, no API calls, gates behind unit tests
+3. **AI Eval Suite** — calls Anthropic API, manual trigger only to control costs
 
-- Azure DevOps YAML pipeline configuration
-- Quality gates tied to AI output metrics
-- CI/CD from the configuration side (not just consuming pipelines)
-- Drift detection in automated CI context
+Branch protection rules on main require:
+- All PRs must pass Unit Tests and Smoke Tests before merging
+- Direct pushes to main are blocked — all changes go through feature branches and PRs
+
+### How to Run the Eval Suite via GitHub Actions
+
+1. Go to github.com/cmaloney7/job-fit-agent
+2. Click the **Actions** tab
+3. Click **Job Fit Agent CI** in the left sidebar
+4. Click **Run workflow** → set `run_evals` to `true`
+5. Click the green **Run workflow** button
+
+Takes ~3 minutes and costs ~$0.10 in API credits.
+
+### What You Learned
+
+- GitHub Actions YAML pipeline syntax — `on`, `jobs`, `steps`, `needs`, `if`
+- How to gate jobs with `needs:` — smoke tests only run if unit tests pass
+- How to store secrets with `secrets.ANTHROPIC_API_KEY` — never exposed in logs
+- `workflow_dispatch` — manual trigger with input parameters
+- Debugging CI environment differences vs local:
+  - Missing dependencies (playwright, flask not in requirements.txt)
+  - Headed browser failing on headless Linux runner (set headless=True)
+- Branch protection rules — requiring status checks before merge
+- Feature branch workflow: `git checkout -b feature/name` → PR → CI → merge
+
+### Feature Branch Workflow
+
+```bash
+# Never push directly to main
+git checkout -b feature/my-change
+# make changes
+git add .
+git commit -m "Description of change"
+git push origin feature/my-change
+# Open PR on GitHub → CI runs → merge when green
+```
 
 ---
 
-## Phase 5 — LangChain Agent *(coming soon)*
+## Phase 5 — LangChain Multi-Tool Agent
 
-### What You'll Build
+### What You Built
 
-Refactor the analyzer into a LangChain multi-tool agent with separate tools
-for reading the JD, querying the resume, and generating interview prep.
+A LangChain agent version of the job fit analyzer (`src/agent.py`) that
+replaces the single API call with an autonomous multi-tool workflow.
 
-### Skills Targeted
+**Phase 1 flow:**
+```
+resume + JD → single Claude API call → FitAnalysis object
+```
 
-- How agentic systems are architecturally constructed
-- Tool calling, memory, and multi-step reasoning
-- Why this matters for testing agentic systems
-- LangChain/LangGraph hands-on experience
+**Phase 5 flow:**
+```
+resume + JD → Agent reasons → calls tools → synthesizes → narrative report
+```
+
+### Architecture
+
+**Three tools the agent can call:**
+
+`analyze_fit()` — Returns fit level, score, headline, strong matches,
+differentiators, and reasoning. The agent calls this first.
+
+`identify_gaps()` — Returns each skill gap with severity (blocking/notable/minor)
+and bridge advice. Also returns whether the role is worth applying to.
+
+`generate_recommendations()` — Returns cover letter angles, likely interview
+questions, and things to address proactively.
+
+**The context pattern — why tools take no parameters:**
+
+The agent controls when and how tools are called. If tools require `resume`
+and `job_description` as parameters, the agent sometimes drops them on
+subsequent calls (a real LangChain bug). Solution: store inputs in a
+module-level context dict before the agent runs. Tools read from context
+instead of receiving inputs directly.
+
+```python
+_ctx: dict[str, str] = {}
+
+def run_analysis(resume: str, job_description: str) -> str:
+    _ctx["resume"] = resume        # set context first
+    _ctx["job_description"] = job_description
+    executor = build_agent()
+    result = executor.invoke(...)  # agent calls tools, tools read from _ctx
+    return result["output"]
+```
+
+**Caching across tool calls:**
+
+All three tools call `_get_analysis()` which caches the underlying
+`FitAnalysis` object. If the agent calls all three tools on the same
+inputs, only one Anthropic API call is made. The agent sees three
+separate tool results but pays for one.
+
+### How to Run It
+
+```bash
+python -c "
+from pathlib import Path
+from src.agent import run_analysis
+
+resume = Path('data/resume.txt').read_text().strip()
+jd = Path('data/sample_jds/gravie.txt').read_text().strip()
+output = run_analysis(resume, jd)
+
+if isinstance(output, list):
+    output = output[0]['text']
+print(output)
+"
+```
+
+### What You Learned
+
+**LangChain fundamentals:**
+- `@tool` decorator — converts a function into a LangChain tool; the docstring
+  is sent to Claude so it knows when and why to call the tool
+- `ChatPromptTemplate.from_messages()` — system prompt, human input, and
+  `{agent_scratchpad}` placeholder where the agent stores reasoning between calls
+- `create_tool_calling_agent()` — wires the LLM, tools, and prompt together
+- `AgentExecutor` — runs the agent loop; `verbose=True` shows reasoning in real time
+- `ChatAnthropic` — LangChain's wrapper for the Anthropic API
+
+**The agent scratchpad:**
+The `{agent_scratchpad}` placeholder is how LangChain makes the system agentic.
+Between tool calls, the agent writes its intermediate reasoning to the scratchpad.
+It thinks, calls a tool, sees the result, thinks again, calls another tool. Without
+the scratchpad, it would be a single-shot LLM call, not an agent.
+
+**Real bug encountered — parameter dropping:**
+The agent was calling `generate_recommendations` with an empty dict `{}`
+because after calling the first two tools it treated the inputs as "known."
+The fix was moving inputs to module-level context so tools don't require
+parameters at all. This is a real agentic system failure mode worth knowing.
+
+**Output normalization:**
+The agent output can be either a string or a list depending on the model
+and LangChain version. Always normalize:
+```python
+if isinstance(output, list):
+    output = output[0]['text']
+```
+
+### Interview Talking Point
+
+*"I refactored my job fit analyzer from a single LLM call into a LangChain
+multi-tool agent. The agent autonomously decides which tools to call —
+fit analysis, gap identification, and recommendation generation — and
+synthesizes the results into a structured narrative report. I debugged a
+real agentic failure where the agent was dropping required parameters on
+subsequent tool calls, and solved it by moving shared state to a
+module-level context. The output quality improved significantly because the
+agent can reason about the combined results of all three tools before
+producing its final synthesis."*
 
 ---
 
@@ -340,8 +498,9 @@ for reading the JD, querying the resume, and generating interview prep.
 ```
 job_fit_agent/
 ├── src/
-│   ├── models.py        # FitAnalysis, FitLevel, SkillGap dataclasses
+│   ├── agent.py         # Phase 5: LangChain multi-tool agent
 │   ├── analyzer.py      # Anthropic API client and JSON parsing
+│   ├── models.py        # FitAnalysis, FitLevel, SkillGap dataclasses
 │   ├── prompts.py       # System prompt and analysis prompt templates
 │   └── __init__.py
 ├── evals/
@@ -396,10 +555,10 @@ python -m playwright install chromium
 # Run your first analysis
 python main.py --jd data/sample_jds/gravie.txt
 
-# Run unit tests (instant, no API)
+# Unit tests (instant, no API)
 pytest tests/ -v
 
-# Run eval suite (4 API calls, ~3 minutes)
+# Eval suite (4 API calls, ~3 minutes)
 pytest evals/eval_suite.py -v
 ```
 
@@ -553,6 +712,15 @@ python web/app.py
 # CLI analysis
 python main.py --jd data/sample_jds/gravie.txt
 
+# LangChain agent (Phase 5)
+python -c "
+from pathlib import Path
+from src.agent import run_analysis
+resume = Path('data/resume.txt').read_text().strip()
+jd = Path('data/sample_jds/gravie.txt').read_text().strip()
+print(run_analysis(resume, jd))
+"
+
 # Unit tests (instant)
 pytest tests/ -v
 
@@ -577,4 +745,6 @@ pytest tests_e2e/ -v
 | `playwright` | Browser automation for E2E tests |
 | `rich` | Color-coded terminal output |
 | `pytest` | Test framework for unit tests, evals, and E2E |
-| `python-dotenv` | Optional: load API key from `.env` file |
+| `python-dotenv` | Load API key from `.env` file |
+| `langchain` | Agent framework for Phase 5 multi-tool agent |
+| `langchain-anthropic` | LangChain wrapper for the Anthropic API |
